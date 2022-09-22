@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html class='h-100' lang='ru' prefix='og: https://ogp.me/ns#'>
+
+<head>
+  <title>Прокси-сервер (Caddy) | Продакшен и Деплой</title>
+  <meta name="description"
+    content="Прокси-сервер (Caddy) / Продакшен и Деплой: Разобраться в том зачем он нужен и как его подключить">
+  <link rel="canonical" href="https://ru.hexlet.io/courses/production-basics/lessons/web-server/theory_unit">
+  <meta name="robots" content="noarchive">
+  <link rel="image_src"
+    href="https://cdn2.hexlet.io/assets/fallback/course-4d9fa44ee300b9f5601f72e1a3673dda8a276575aba7cf6a225a7b25cb5cf685.png">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Прокси-сервер (Caddy) / Продакшен и Деплой">
+  <meta property="og:description"
+    content="Прокси-сервер (Caddy) / Продакшен и Деплой: Разобраться в том зачем он нужен и как его подключить">
+  <meta property="og:url" content="https://ru.hexlet.io/courses/production-basics/lessons/web-server/theory_unit">
+  <meta property="og:image"
+    content="https://cdn2.hexlet.io/assets/fallback/course-4d9fa44ee300b9f5601f72e1a3673dda8a276575aba7cf6a225a7b25cb5cf685.png">
+  <meta property="og:site_name" content="Хекслет">
+  <meta name="csrf-param" content="authenticity_token" />
+  <meta name="csrf-token"
+    content="JA52uP6R95yb7du1QAZH5ntQsrE5ACCTYxtlCwDt3b2q0rl5IPV0yrWMPDYrG4nm11wIA4IwXuRjSzZ7gi7_iA" />
+  <meta name="csp-nonce" />
+  <link rel="icon" type="image/x-icon"
+    href="https://cdn2.hexlet.io/assets/favicon-9213ff1fc34b4e2da96c3b3eb582b3d10180b250e993141d7928d6aa1f5647c1.ico" />
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+  <meta charset='utf-8'>
+  <meta content='IE=Edge' http-equiv='X-UA-Compatible'>
+  <meta content='b9d3902d34' name='verify-admitad'>
+
+  <meta content='aa2vrdtq64dub8knuf83lwywit311w' name='facebook-domain-verification'>
+
+  <link rel="stylesheet" href="https://cdn2.hexlet.io/packs/css/application-3602bedc.css" media="all" />
+
+  <script>
+    //<![CDATA[
+    window.gon = {}; gon.fired_events = {}; gon.is_bot = false; gon.applications = {}; gon.current_user = { "id": 357773, "email": "gmitron01@gmail.com", "sanitized_phone_number": "", "username": "user-baab458b64660077", "created_at": "2021-04-08T06:42:14.090Z", "last_viewed_notification_id": null, "paid_days_count": 13, "first_name": "Alexey", "last_name": null, "full_name": "Alexey", "birthday": null, "city": null, "text": "gmitron01@gmail.com (user-baab458b64660077)", "is_guest": false, "is_mentor": null, "is_tutor": false, "is_hexlet_employee": false, "current_company": null, "can_use_paid_features": true, "current_program": "ansible-deploy", "is_active_group_member": false, "url": "https://hexlet.io/u/user-baab458b64660077" }; gon.token = "ubYy88O3QO5XtncgPBqE2OXeRlkymayh9ow4_Dtsz683av0yHdPDuHnXkKNXB0rYSdL864mp0tb23GuMua_tmg"; gon.events = ["blog_post_moderation_submitted", "code_review_created", "company_balance_recounted", "company_created", "company_updated", "course_started", "course_finished", "exercise_started", "lead_created", "lesson_started", "lesson_finished", "lesson_unit_finished", "product_payment_paid", "program_started", "program_finished", "project_started", "project_check_point_finished", "project_sent_to_review", "project_finished", "registration_failed", "show_lead_modal", "signed_up", "signed_up_program_started", "solution_viewed", "subscription_cancelled", "subscription_deleted", "subscription_created", "subscription_paid", "subscription_price_changed", "subscription_product_changed", "test", "topic_created", "topic_comment_created", "tutor_assigned", "tutorship_application_created", "user_email_confirmed", "user_email_changed", "user_updated", "custom_payment_paid", "test_event", "project_member_review_accepted", "project_member_review_approved", "project_member_review_declined", "project_member_review_rejected", "topic_assigned", "topic_comment_marked_as_solution"]; gon.disqus_name = "hexletio"; gon.locale = "ru"; gon.rails_env = "production"; gon.mobile = false; gon.google = { "analytics_key": "UA-1360700-51", "optimize_key": "GTM-5QDVFPF" }; gon.recaptcha = { "site_key_v3": "6LenGbgZAAAAAM7HbrDbn5JlizCSzPcS767c9vaY" }; gon.social_signin = false; gon.typoreporter_google_form_id = "1FAIpQLSeibfGq-KvWQ2Fyru-zkFFRVTLBuzXAHAoEyN1p49FtDmNoNA"; gon.notifications = [{ "id": 3664939, "message": "Сохранили решение для \u003cb\u003eФильтры\u003c/b\u003e", "url": "https://ru.hexlet.io/code_reviews/712293", "human_created_at": "12 сентября 2022", "icon": "\u003cspan class=\"fas fa-bicycle\"\u003e\u003c/span\u003e" }, { "id": 3611506, "message": "Сохранили решение для \u003cb\u003eКомпозиция вместо наследования\u003c/b\u003e", "url": "https://ru.hexlet.io/code_reviews/686898", "human_created_at": "22 августа 2022", "icon": "\u003cspan class=\"fas fa-bicycle\"\u003e\u003c/span\u003e" }, { "id": 3611441, "message": "Сохранили решение для \u003cb\u003eИсключения\u003c/b\u003e", "url": "https://ru.hexlet.io/code_reviews/686864", "human_created_at": "22 августа 2022", "icon": "\u003cspan class=\"fas fa-bicycle\"\u003e\u003c/span\u003e" }, { "id": 3611373, "message": "Сохранили решение для \u003cb\u003eПринцип подстановки Лисков\u003c/b\u003e", "url": "https://ru.hexlet.io/code_reviews/686830", "human_created_at": "22 августа 2022", "icon": "\u003cspan class=\"fas fa-bicycle\"\u003e\u003c/span\u003e" }, { "id": 3611305, "message": "Сохранили решение для \u003cb\u003eПереопределение методов\u003c/b\u003e", "url": "https://ru.hexlet.io/code_reviews/686799", "human_created_at": "22 августа 2022", "icon": "\u003cspan class=\"fas fa-bicycle\"\u003e\u003c/span\u003e" }, { "id": 3606224, "message": "Сохранили решение для \u003cb\u003eШаблонный метод\u003c/b\u003e", "url": "https://ru.hexlet.io/code_reviews/683510", "human_created_at": "19 августа 2022", "icon": "\u003cspan class=\"fas fa-bicycle\"\u003e\u003c/span\u003e" }]; gon.lesson = { "id": 2414, "slug": "web-server" }; gon.course = { "slug": "production-basics" }; gon.topics = []; gon.topic_type = "community"; gon.communitable_type = "Lesson"; gon.api_topics_url = "https://ru.hexlet.io/api/topics/lessons.json?q%5Bcommunitable_of_Lesson_type_id_eq%5D=2414\u0026q%5Bcommunitable_type_eq%5D=Lesson"; gon.communitable_id = 2414; gon.can_render_new_topic_box = true; gon.topics_count = 0;
+//]]>
+  </script>
+  <script>
+    (function () {
+      const options = {
+        dsn: 'https://5e408926ab534fba9c66d8f620d1f58b@o1090356.ingest.sentry.io/6106229',
+        environment: 'production',
+        release: 'v7220',
+        initialScope: {
+          user: gon.current_user
+        },
+        ignoreErrors: [
+          'top.GLOBALS', // Random plugins/extensions
+          'VK is',
+          'VK.Retargeting is ',
+          "Can't find variable: VK",
+          'pktAnnotationHighlighter',
+          'amplitude',
+          'google_tag_manager',
+          'Unexpected keyword',
+          'illegal character',
+          'Unexpected identifier',
+          'Illegal invocation',
+          'missing = in const declaration',
+        ],
+        allowUrls: [/https?:\/\/((cdn|cdn2|ru)\.)?hexlet.io/],
+        beforeSend(event, hint) {
+          const stack = hint?.originalException?.stack || '';
+          const errorInitiator = stack
+            .split('\n')
+            .map((line) => line.trim())
+            .find((line) => line.startsWith('at'));
+          const causedByConsole = errorInitiator
+            ? errorInitiator.includes('<anonymous>:')
+            : false;
+          return causedByConsole ? null : event;
+        },
+      };
+      const key = options.dsn.replace('https://', '').split('@')[0];
+
+      (function (c, u, v, n, p, e, z, A, w) { function k(a) { if (!x) { x = !0; var l = u.getElementsByTagName(v)[0], d = u.createElement(v); d.src = A; d.crossOrigin = "anonymous"; d.addEventListener("load", function () { try { c[n] = r; c[p] = t; var b = c[e], d = b.init; b.init = function (a) { for (var b in a) Object.prototype.hasOwnProperty.call(a, b) && (w[b] = a[b]); d(w) }; B(a, b) } catch (g) { console.error(g) } }); l.parentNode.insertBefore(d, l) } } function B(a, l) { try { for (var d = m.data, b = 0; b < a.length; b++)if ("function" === typeof a[b]) a[b](); var e = !1, g = c.__SENTRY__; "undefined" !== typeof g && g.hub && g.hub.getClient() && (e = !0); g = !1; for (b = 0; b < d.length; b++)if (d[b].f) { g = !0; var f = d[b]; !1 === e && "init" !== f.f && l.init(); e = !0; l[f.f].apply(l, f.a) } !1 === e && !1 === g && l.init(); var h = c[n], k = c[p]; for (b = 0; b < d.length; b++)d[b].e && h ? h.apply(c, d[b].e) : d[b].p && k && k.apply(c, [d[b].p]) } catch (C) { console.error(C) } } for (var f = !0, y = !1, q = 0; q < document.scripts.length; q++)if (-1 < document.scripts[q].src.indexOf(z)) { f = "no" !== document.scripts[q].getAttribute("data-lazy"); break } var x = !1, h = [], m = function (a) { (a.e || a.p || a.f && -1 < a.f.indexOf("capture") || a.f && -1 < a.f.indexOf("showReportDialog")) && f && k(h); m.data.push(a) }; m.data = []; c[e] = c[e] || {}; c[e].onLoad = function (a) { h.push(a); f && !y || k(h) }; c[e].forceLoad = function () { y = !0; f && setTimeout(function () { k(h) }) }; "init addBreadcrumb captureMessage captureException captureEvent configureScope withScope showReportDialog".split(" ").forEach(function (a) { c[e][a] = function () { m({ f: a, a: arguments }) } }); var r = c[n]; c[n] = function (a, e, d, b, f) { m({ e: [].slice.call(arguments) }); r && r.apply(c, arguments) }; var t = c[p]; c[p] = function (a) { m({ p: a.reason }); t && t.apply(c, arguments) }; f || setTimeout(function () { k(h) }) })(window, document, "script", "onerror", "onunhandledrejection", "Sentry", key, "https://browser.sentry-cdn.com/6.17.4/bundle.min.js", options);
+
+    })();
+  </script>
+
+  <script>
+    window.EventsMapping = {
+      on: function (eventName, callback) {
+        if (gon.events.indexOf(eventName) === -1) {
+          throw new Error('Undefined event name ' + eventName + '. Check gon.events.');
+        }
+
+        if (!gon.fired_events.hasOwnProperty(eventName)) {
+          return;
+        }
+        var options = gon.fired_events[eventName];
+
+        callback(eventName, options);
+      }
+    };
+
+    // for custom scroll trigger in gtm
+    var onceScrollHandler = function () {
+      var events = window.dataLayer || [];
+      events.push({ event: 'real_first_scroll' });
+      window.removeEventListener('scroll', onceScrollHandler, false);
+    };
+    window.addEventListener('scroll', onceScrollHandler);
+
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WK88TH');
+  </script>
+
+  <script>
+    !function () {
+      var analytics = window.analytics = window.analytics || []; if (!analytics.initialize) if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice."); else {
+        analytics.invoked = !0; analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on", "addSourceMiddleware", "addIntegrationMiddleware", "setAnonymousId", "addDestinationMiddleware"]; analytics.factory = function (e) { return function () { var t = Array.prototype.slice.call(arguments); t.unshift(e); analytics.push(t); return analytics } }; for (var e = 0; e < analytics.methods.length; e++) { var key = analytics.methods[e]; analytics[key] = analytics.factory(key) } analytics.load = function (key, e) { var t = document.createElement("script"); t.type = "text/javascript"; t.async = !0; t.src = "https://collect-analytics.hexlet.io/analytics/" + key + "/analytics.js"; var n = document.getElementsByTagName("script")[0]; n.parentNode.insertBefore(t, n); analytics._loadOptions = e }; analytics.SNIPPET_VERSION = "4.13.1";
+
+        analytics.load("45dec37f43fa49e392061da423f072ca");
+        analytics.page();
+
+        if (gon.current_user.id) {
+          var user = gon.current_user;
+
+          analytics.identify(user.id.toString(), {
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            public_name: user.public_name,
+            city: user.city,
+            birthday: user.birthday,
+            sanitized_phone_number: user.sanitized_phone_number,
+            locale: user.locale,
+            url: user.url
+          });
+        }
+      }
+    }();
+  </script>
+
+  <script
+    type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Hexlet","url":"https://hexlet.io","sameAs":["https://www.facebook.com/Hexlet","https://www.youtube.com/user/HexletUniversity","https://twitter.com/HexletHQ","https://soundcloud.com/hexlet"],"legalName":"Hexlet Ltd.","address":"Itälahdenkatu 22 A, 00210 Helsinki, Finland","vatID":"VAT ID: FI26641607","telephone":"+7 495 085 28 38","logo":{"@type":"ImageObject","url":"https://cdn2.hexlet.io/assets/hexlet_logo-4e7b643fd7cbe42da81624aba2faa9267523b2b925d5b576536e05d061659083.png"}}</script>
+
+
+  <script
+    type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","isAccessibleForFree":false,"headline":"Прокси-сервер (Caddy)","datePublished":"2022-03-10T21:53:16.907Z","dateModified":"2022-09-09T08:57:49.255Z","image":"https://cdn2.hexlet.io/assets/hexlet_logo-4e7b643fd7cbe42da81624aba2faa9267523b2b925d5b576536e05d061659083.png","publisher":{"@context":"https://schema.org","@type":"Organization","name":"Hexlet","url":"https://hexlet.io","sameAs":["https://www.facebook.com/Hexlet","https://www.youtube.com/user/HexletUniversity","https://twitter.com/HexletHQ","https://soundcloud.com/hexlet"],"legalName":"Hexlet Ltd.","address":"Itälahdenkatu 22 A, 00210 Helsinki, Finland","vatID":"VAT ID: FI26641607","telephone":"+7 495 085 28 38","logo":{"@type":"ImageObject","url":"https://cdn2.hexlet.io/assets/hexlet_logo-4e7b643fd7cbe42da81624aba2faa9267523b2b925d5b576536e05d061659083.png"}},"hasPart":{"@type":"WebPageElement","isAccessibleForFree":false,"cssSelector":".paywall"}}</script>
+
+</head>
+
+<body class='h-100'>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WK88TH" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+
+  <div class='d-flex flex-column flex-md-row h-100'>
+    <div class='border-end flex-fill tab-content overflow-hidden h-100'>
+      <div aria-labelledby='lesson-tab' class='tab-pane fade show active overflow-auto h-100 position-relative'
+        id='lesson' role='tabpanel'>
+        <div class='container-xl my-3 mb-md-4 mb-lg-5'>
+          <div class='row justify-content-center'>
+            <div class='col-12 col-lg-10 col-xl-9 col-xxl-8'>
+
+              <div class='mt-3 paywall'>
+                <div class='p-2 p-md-4 card'>
+                  <div class='card-body p-2 p-md-3'>
+                    <div class='hexlet-markdown-body overflow-hidden'>
+                      <div class='mb-4 position-relative d-inline-block'>
+                        <h1 class='my-0 d-flex flex-column-reverse'>
+                          Прокси-сервер (Caddy)
+                          <span class='sr-only'>—</span>
+                          <span class='h6 mb-0 fw-normal text-muted'>Продакшен и Деплой</span>
+                        </h1>
+                        <a class="stretched-link" aria-label="Продакшен и Деплой" href="/courses/production-basics"></a>
+                      </div>
+                      <!-- source_path[16650/470-web-server/README.md] -->
+                      <p>Для запуска веб-приложений нужен веб-сервер, программа, которая принимает входящие HTTP-запросы
+                        и передает их на обработку приложению. Приложение делает свою работу и отдает результат
+                        веб-серверу, который формирует HTTP-ответ для клиента.</p>
+                      <!-- TODO: Картинка -->
+                      <p>Часто такой веб-сервер либо встроен в сам язык как модуль, либо написан на этом же языке, для
+                        запуска кода внутри себя. Обычно, задачу интеграции берут на себя фреймворки. В нашем приложении
+                        <a href="https://github.com/hexlet-components/devops-example-app" target="_blank"
+                          rel="nofollow">devops-example-app</a> за это отвечает фреймворк <a
+                          href="https://www.fastify.io/" target="_blank" rel="nofollow">fastify</a>. Внутри себя он <a
+                          href="https://github.com/fastify/fastify/blob/main/lib/server.js#L210" target="_blank"
+                          rel="nofollow">использует встроенный</a> в Node.js веб-сервер:</p>
+                      <pre class="hljs"><code class=javascript><span style="color: #000000;font-weight: bold">import</span> <span style="">http</span> <span style="color: #000000;font-weight: bold">from</span> <span style="color: #d14">'</span><span style="color: #d14">http</span><span style="color: #d14">'</span><span style="">;</span>
+
+<span style="color: #000000;font-weight: bold">const</span> <span style="">server</span> <span style="color: #000000;font-weight: bold">=</span> <span style="">http</span><span style="">.</span><span style="">createServer</span><span style="">((</span><span style="">req</span><span style="">,</span> <span style="">res</span><span style="">)</span> <span style="color: #000000;font-weight: bold">=&gt;</span> <span style="">{</span>
+  <span style="">res</span><span style="">.</span><span style="">writeHead</span><span style="">(</span><span style="color: #009999">200</span><span style="">,</span> <span style="">{</span> <span style="color: #d14">'</span><span style="color: #d14">Content-Type</span><span style="color: #d14">'</span><span style="">:</span> <span style="color: #d14">'</span><span style="color: #d14">text/plain</span><span style="color: #d14">'</span> <span style="">});</span>
+  <span style="">res</span><span style="">.</span><span style="">end</span><span style="">(</span><span style="color: #d14">'</span><span style="color: #d14">okay</span><span style="color: #d14">'</span><span style="">);</span>
+<span style="">}).</span><span style="">listen</span><span style="">(</span><span style="color: #009999">8080</span><span style="">);</span>
+</code></pre>
+                      <p>Несмотря на простоту такой схемы, ее в большинстве проектов недостаточно. Помимо встроенного
+                        веб-сервера, нужен внешний, выполняющий роль реверс-прокси (reverse-proxy), например <a
+                          href="https://www.nginx.com/" target="_blank" rel="nofollow">Nginx</a> или <a
+                          href="https://caddyserver.com/" target="_blank" rel="nofollow">Caddy</a>.</p>
+                      <!-- TODO: Картинка -->
+                      <p>Прокси-сервер ставится между клиентами и внутренней инфраструктурой. Он принимает запросы от
+                        клиентов и переадресует их на внутренний веб-сервер или веб-сервера, если их много. Именно
+                        поэтому он называется реверс (обратный), снаружи во внутрь. Зачем он нужен?</p>
+                      <ol>
+                        <li>Проекты редко состоят только из кода, который мы запускаем на встроенном веб-сервере. Помимо
+                          кода, почти всегда есть файлы, css, js, картинки и другие файлы. Для их &quot;раздачи&quot;
+                          тоже нужен веб-сервер, а еще нужно уметь их сжимать и кешировать.</li>
+                        <li>Далеко не все внутренние веб-сервера умеют эффективно обрабатывать &quot;медленных
+                          клиентов&quot;. Это клиенты с медленным соединением, которые очень долго отправляют и
+                          принимают данные. Они занимают ресурсы веб-сервера и приложения. Если придет достаточное
+                          количество медленных клиентов, то веб-сервер и приложение быстро перестанут отвечат.
+                          Пользователи начнут видеть ошибки.</li>
+                        <li>Встроенные веб-сервера достаточно ограниченны в своих возможностях, например в том как они
+                          обрабатывают ошибки, как поддерживают HTTPS и так далее.</li>
+                      </ol>
+                      <p>Эти причины настолько серьезны, что без реверс-прокси в продакшен не ходят. Только какой
+                        выбрать? Nginx самый популярный сервер в мире, но Caddy, гораздо проще в настройке и отладке. У
+                        него встроенная поддержка Let&#39;s Encrypt, Caddy автоматически обновляет сертификаты для
+                        работы HTTPS. Поэтому в этом курсе мы воспользуемся Caddy. Изучив его, вы без труда сможете
+                        перейти на Nginx, так как концептуально все подобные веб-сервера работают одинаково.</p>
+                      <h2 id="caddy">Caddy</h2>
+                      <p>Для начала Caddy нужно подключить к локальной разработке. Так мы сможем тестировать его
+                        конфигурацию еще до выкладки в продакшен.</p>
+                      <h3 id="lokalnoe-okruzhenie">Локальное окружение</h3>
+                      <p>Когда наш проект состоял из одного приложения, его было достаточно разрабатывать напрямую без
+                        Docker Compose. Как только добавляется сервис, в нашем случае внешний веб-сервер Caddy, то без
+                        Docker Compose становится сложно. Появляется задача управлять набором сервисов как единым целым,
+                        стартовать их, останавливать и перезапускать.</p>
+                      <p>Добавим Docker Compose с такой конфигурацией:</p>
+                      <pre class="hljs"><code class=yaml><span style="color: #999988;font-style: italic"># file: docker-compose.yml</span>
+<span style="color: #008080">version</span><span style="">:</span> <span style="color: #d14">"</span><span style="color: #d14">3"</span>
+
+<span style="color: #008080">services</span><span style="">:</span>
+  <span style="color: #008080">app</span><span style="">:</span> <span style="color: #999988;font-style: italic"># Само приложение</span>
+    <span style="color: #008080">build</span><span style="">:</span> <span style="color: #d14">.</span> <span style="color: #999988;font-style: italic"># Находится в корне репозитория</span>
+    <span style="color: #008080">volumes</span><span style="">:</span>
+      <span style="">-</span> <span style="color: #d14">.:/app</span>
+    <span style="color: #008080">ports</span><span style="">:</span>
+      <span style="">-</span> <span style="color: #d14">3000:3000</span>
+
+  <span style="color: #008080">caddy</span><span style="">:</span> <span style="color: #999988;font-style: italic"># Веб-сервер</span>
+    <span style="color: #008080">build</span><span style="">:</span> <span style="color: #999988;font-style: italic"># Находится внутри services/caddy</span>
+      <span style="color: #008080">context</span><span style="">:</span> <span style="color: #d14">.</span>
+      <span style="color: #008080">dockerfile</span><span style="">:</span> <span style="color: #d14">services/caddy/Dockerfile</span>
+    <span style="color: #008080">volumes</span><span style="">:</span>
+      <span style="">-</span> <span style="color: #d14">.:/app</span>
+      <span style="">-</span> <span style="color: #d14">./services/caddy/Caddyfile:/etc/caddy/Caddyfile</span>
+    <span style="color: #008080">ports</span><span style="">:</span>
+      <span style="">-</span> <span style="color: #d14">80:80</span>
+      <span style="">-</span> <span style="color: #d14">443:443</span>
+</code></pre>
+                      <p>Почему именно так? Мы придерживаемся структуры, в которой основное приложение располагается в
+                        корне проекта, а дополнительные сервисы лежат в директории <em>services</em>. У каждого сервиса
+                        своя директория с Dockerfile внутри.</p>
+                      <pre class="hljs"><code class=bash><span style="color: #999988;font-style: italic"># services/caddy/Dockerfile</span>
+<span style="color: #999988;font-style: italic"># У Caddy есть официальный образ, но его недостаточно</span>
+<span style="color: #999988;font-style: italic"># В продакшене конфигурация должна быть частью образа</span>
+<span style="color: #999988;font-style: italic"># Поэтому мы делаем свой образ, в который "зашиваем" конфигурацию</span>
+FROM caddy
+
+<span style="color: #999988;font-style: italic"># Конфигурационный файл Caddy</span>
+<span style="color: #999988;font-style: italic"># Читается из /etc/caddy/Caddyfile</span>
+COPY services/caddy/Caddyfile /etc/caddy/
+
+<span style="color: #999988;font-style: italic"># Копируем приложение для доступа к статическим файлам хранящимся в репозитории</span>
+<span style="color: #999988;font-style: italic"># Обычно это элементы интерфейса</span>
+COPY <span style="color: #0086B3">.</span> /app
+</code></pre>
+                      <p>Там же хранятся дополнительные файлы конкретного сервиса. Например у Caddy это файл Caddyfile,
+                        в котором содержится конфигурация:</p>
+                      <pre class="hljs"><code class=bash><span style="color: #999988;font-style: italic"># Домены, которые будет обслуживать Caddy</span>
+<span style="color: #999988;font-style: italic"># Первый домен для локальной разработки, второй для продакшена (воображаемого)</span>
+localhost, devops-example.test <span style="color: #000000;font-weight: bold">{</span>
+    <span style="color: #999988;font-style: italic"># Формируем самоподписной сертификат для работы https</span>
+    tls internal
+
+    <span style="color: #999988;font-style: italic"># Отдаем картинки напрямую из файловой системы минуя приложение</span>
+    <span style="color: #999988;font-style: italic"># Картинки в нашем проекте хранятся в /app/public внутри образа с Caddy</span>
+    <span style="color: #999988;font-style: italic"># Выше в Dockerfile мы туда их копируем</span>
+    <span style="color: #999988;font-style: italic"># /images/app.png =&gt; /app/public/images/app.png</span>
+    handle /images/<span style="color: #000000;font-weight: bold">*</span> <span style="color: #000000;font-weight: bold">{</span>
+        file_server
+        root <span style="color: #000000;font-weight: bold">*</span> /app/public
+    <span style="color: #000000;font-weight: bold">}</span>
+
+    <span style="color: #999988;font-style: italic"># Все остальные запросы передаются в приложение</span>
+    handle <span style="color: #000000;font-weight: bold">{</span>
+        <span style="color: #999988;font-style: italic"># app - имя домена во внутренней сети Docker</span>
+        <span style="color: #999988;font-style: italic"># В девелопменте совпадает с именем сервиса в docker-compose.yml</span>
+        <span style="color: #999988;font-style: italic"># Для продакшена надо будет создать общую сеть</span>
+        reverse_proxy app:3000
+    <span style="color: #000000;font-weight: bold">}</span>
+
+    <span style="color: #999988;font-style: italic"># Включаем логгирование для удобной отладки</span>
+    log <span style="color: #000000;font-weight: bold">{</span>
+        format json
+    <span style="color: #000000;font-weight: bold">}</span>
+<span style="color: #000000;font-weight: bold">}</span>
+
+</code></pre>
+                      <p>После того как все файлы добавлены, можно запустить проект локально и убедиться что он
+                        работает:</p>
+                      <pre class="hljs"><code class=bash>docker compose up
+
+docker compose up <span style="color: #000080">--abort-on-container-exit</span>
+<span style="color: #000000;font-weight: bold">[</span>+] Running 2/0
+ ⠿ Container devops-example-app-caddy-1  Created
+ ⠿ Container devops-example-app-app-1    Created
+Attaching to devops-example-app-app-1, devops-example-app-caddy-1
+
+<span style="color: #999988;font-style: italic"># Урезанный вывод</span>
+devops-example-app-caddy-1  | <span style="color: #000000;font-weight: bold">{</span><span style="color: #d14">"level"</span>:<span style="color: #d14">"info"</span>,<span style="color: #d14">"ts"</span>:1646952470.170849,<span style="color: #d14">"msg"</span>:<span style="color: #d14">"serving initial configuration"</span><span style="color: #000000;font-weight: bold">}</span>
+devops-example-app-app-1    | <span style="color: #000000;font-weight: bold">&gt;</span> fastify start server/plugin.js <span style="color: #000080">-a</span> 0.0.0.0 <span style="color: #000080">-l</span> info <span style="color: #000080">-P</span>
+devops-example-app-app-1    | 22:48:50 ✨ Server listening at http://0.0.0.0:3000
+</code></pre>
+                      <p>После этого запрос к <em>localhost</em> пойдет в Caddy, который выполнит автоматическое
+                        перенаправление на <em>https</em>. Браузер укажет на недоверенный сертификат, что нормально, так
+                        как он самоподписной. Все что остается сделать, чтобы увидеть сайт - подвердить что вы согласны
+                        с риском.</p>
+                      <h3 id="prodakshen">Продакшен</h3>
+                      <p>Первым делом добавим Caddy в сборку на коммит. Для этого создадим репозиторий для Caddy на
+                        Docker Hub и расширим воркфлоу <em>main.yml</em>:</p>
+                      <pre class="hljs"><code class=yaml><span style="color: #999988;font-style: italic"># .github/workflows/main.yml</span>
+
+<span style="color: #999988;font-style: italic"># Добавляем сразу после сборки app</span>
+<span style="">-</span> <span style="color: #008080">name</span><span style="">:</span> <span style="color: #d14">Build and push caddy</span>
+  <span style="color: #008080">uses</span><span style="">:</span> <span style="color: #d14">docker/build-push-action@v2</span>
+  <span style="color: #008080">with</span><span style="">:</span>
+    <span style="color: #008080">context</span><span style="">:</span> <span style="color: #d14">.</span>
+    <span style="color: #008080">file</span><span style="">:</span> <span style="color: #d14">services/caddy/Dockerfile</span>
+    <span style="color: #008080">push</span><span style="">:</span> <span style="color: #008080">true</span>
+    <span style="color: #999988;font-style: italic"># Не забудьте создать репозиторий в Docker Hub</span>
+    <span style="color: #008080">tags</span><span style="">:</span> <span style="color: #d14">hexletcomponents/devops-example-caddy:latest</span>
+</code></pre>
+                      <p>Следующим шагом добавим в релиз:</p>
+                      <pre class="hljs"><code class=yaml><span style="color: #999988;font-style: italic"># .github/workflows/release.yml</span>
+
+<span style="color: #999988;font-style: italic"># Добавляем сразу после сборки app</span>
+<span style="">-</span> <span style="color: #008080">run</span><span style="">:</span> <span style="color: #d14">docker pull hexletcomponents/devops-example-caddy:latest</span>
+<span style="">-</span> <span style="color: #008080">run</span><span style="">:</span> <span style="color: #d14">docker tag hexletcomponents/devops-example-caddy:latest hexletcomponents/devops-example-caddy:${{ github.ref_name }}</span>
+<span style="">-</span> <span style="color: #008080">run</span><span style="">:</span> <span style="color: #d14">docker push hexletcomponents/devops-example-caddy:${{ github.ref_name }}</span>
+</code></pre>
+                      <p>Когда файлы добавлены, их нужно закоммитить и выполнить релиз. Если воркфлоу отработал
+                        нормально, значит образ с правильным тегом успешно собрался. Пора переходить к деплою.</p>
+                      <p>Если просто добавить старт контейнера в плейбук <em>ansible/deploy.yml</em>, то сайт не
+                        откроется. Caddy попытается обратиться к указанному в конфигурации <em>app:3000</em> и выдаст в
+                        лог ошибку о недоступности домена. Почему? Каждый контейнер в Docker запускается в изолированной
+                        среде и не знает про другие контейнеры. Для их связи используется <strong>network</strong>.</p>
+                      <pre class="hljs"><code class=yaml><span style="color: #008080">tasks</span><span style="">:</span>
+  <span style="color: #999988;font-style: italic"># Создаем общую сеть</span>
+  <span style="color: #999988;font-style: italic"># Контейнеры добавленные в эту сеть, могут обращаться друг к другу по имени контейнера,</span>
+  <span style="color: #999988;font-style: italic"># который становится dns именем</span>
+  <span style="">-</span> <span style="color: #008080">community.docker.docker_network</span><span style="">:</span>
+      <span style="color: #008080">name</span><span style="">:</span> <span style="color: #d14">devops-example</span>
+
+  <span style="">-</span> <span style="color: #008080">community.docker.docker_container</span><span style="">:</span>
+      <span style="color: #008080">name</span><span style="">:</span> <span style="color: #d14">app</span> <span style="color: #999988;font-style: italic"># имя используется как домен</span>
+      <span style="color: #008080">image</span><span style="">:</span> <span style="color: #d14">"</span><span style="color: #d14">hexletcomponents/devops-example-app:{{</span><span style="color: #008080"> </span><span style="color: #d14">version</span><span style="color: #008080"> </span><span style="color: #d14">}}"</span>
+      <span style="color: #008080">restart_policy</span><span style="">:</span> <span style="color: #d14">always</span>
+      <span style="color: #008080">state</span><span style="">:</span> <span style="color: #d14">started</span>
+      <span style="color: #008080">networks</span><span style="">:</span> <span style="color: #999988;font-style: italic"># Добавляем контейнер в сеть</span>
+        <span style="">-</span> <span style="color: #008080">name</span><span style="">:</span> <span style="color: #d14">devops-example</span>
+      <span style="color: #008080">ports</span><span style="">:</span> <span style="color: #999988;font-style: italic"># Больше не нужно выставлять наружу, потому что доступ идет через Caddy</span>
+        <span style="color: #999988;font-style: italic"># - 3000:3000</span>
+      <span style="color: #008080">env</span><span style="">:</span>
+        <span style="color: #008080">NODE_ENV</span><span style="">:</span> <span style="color: #d14">production</span>
+
+  <span style="">-</span> <span style="color: #008080">community.docker.docker_container</span><span style="">:</span>
+      <span style="color: #008080">name</span><span style="">:</span> <span style="color: #d14">caddy</span> <span style="color: #999988;font-style: italic"># имя используется как домен</span>
+      <span style="color: #008080">image</span><span style="">:</span> <span style="color: #d14">"</span><span style="color: #d14">hexletcomponents/devops-example-caddy:{{</span><span style="color: #008080"> </span><span style="color: #d14">version</span><span style="color: #008080"> </span><span style="color: #d14">}}"</span>
+      <span style="color: #008080">restart_policy</span><span style="">:</span> <span style="color: #d14">always</span>
+      <span style="color: #008080">state</span><span style="">:</span> <span style="color: #d14">started</span>
+      <span style="color: #008080">networks</span><span style="">:</span> <span style="color: #999988;font-style: italic"># Добавляем контейнер в сеть</span>
+        <span style="">-</span> <span style="color: #008080">name</span><span style="">:</span> <span style="color: #d14">devops-example</span>
+      <span style="color: #008080">ports</span><span style="">:</span>
+        <span style="">-</span> <span style="color: #d14">80:80</span>
+        <span style="">-</span> <span style="color: #d14">443:443</span>
+</code></pre>
+                      <p>Когда все добавлено, выполните деплой последнего релиза:</p>
+                      <pre class="hljs"><code class=bash>ansible-playbook release.yml <span style="color: #000080">-i</span> inventory.yml <span style="color: #000080">--extra-vars</span><span style="color: #000000;font-weight: bold">=</span><span style="color: #d14">"version=v6"</span> <span style="color: #000080">-vv</span>
+</code></pre>
+                      <p>Наш проект выложен на сервер и работает. Технически мы можем обратиться к нему по ip-адресу, но
+                        так делать не стоит. ip-адрес всегда меняется при пересоздании сервера, из-за чего постоянно
+                        придется запоминать новый. Запоминать ip-адрес, в принципе, не очень удобно. Лучше иметь
+                        доменное имя, которое никогда не меняется.</p>
+                      <p>Самый простой способ добавить доменное имя для разработки, внести запись в файл
+                        <em>/etc/hosts</em>. Этот файл часть системы DNS, которая выполняет поиск ip-адреса по имени.
+                        Поиск всегда начинается с него:</p>
+                      <pre class="hljs"><code class=bash><span style="color: #999988;font-style: italic"># Укажите тут адрес вашей машины, которую вы создали</span>
+65.108.149.193 devops-example.test
+</code></pre>
+                      <p>Попробуйте открыть в браузере <em>devops-example.test</em>. Если все было сделано правильно, то
+                        вы увидите сайт.</p>
+                      <h2 id="obrabotka-oshibok">Обработка ошибок</h2>
+                      <p>Во время деплоя приложение перезапускается. Между остановкой и стартом новой версии проходит
+                        какое-то время, когда приложение не работает, а пользователи видят ошибку <em>502 Bad
+                          Gateway</em>. Иногда это время достаточно большое, есть приложения которые стартуют минуты.
+                      </p>
+                      <p>Обработка ошибки <em>502</em> задача реверс-прокси. Для этого создается html-файл, в котором
+                        красиво описывается ситуация &quot;мы обновляемся&quot;. Этот файл добавляется в образ к
+                        веб-серверу, а в конфигурации прописываются такие строки:</p>
+                      <pre class="hljs"><code class=bash><span style="color: #999988;font-style: italic"># Caddy</span>
+reverse_proxy <span style="color: #000000;font-weight: bold">{</span>
+  to app:3000
+
+  @error status 502 <span style="color: #999988;font-style: italic"># Только 502 ошибки</span>
+  handle_response @error <span style="color: #000000;font-weight: bold">{</span>
+    <span style="color: #999988;font-style: italic"># Путь по которому хранятся html-файлы для разных ошибок</span>
+    root <span style="color: #000000;font-weight: bold">*</span> /app/services/caddy/error_pages
+    <span style="color: #999988;font-style: italic"># Для всех 502 запросов отдаем файл 502.html</span>
+    <span style="color: #999988;font-style: italic"># Имя произвольное</span>
+    rewrite <span style="color: #000000;font-weight: bold">*</span> /502.html
+    file_server
+  <span style="color: #000000;font-weight: bold">}</span>
+<span style="color: #000000;font-weight: bold">}</span>
+
+<span style="color: #999988;font-style: italic"># Nginx</span>
+<span style="color: #999988;font-style: italic"># Имя файла произвольное</span>
+error_page 502 /502.html<span style="">;</span>
+location <span style="color: #000000;font-weight: bold">=</span> /502.html <span style="color: #000000;font-weight: bold">{</span>
+  root /path/to/files/with/html<span style="">;</span>
+  internal<span style="">;</span>
+<span style="color: #000000;font-weight: bold">}</span>
+</code></pre>
+                      <p>Учтите, что эта ошибка возникает не только во время деплоя. Если приложение упало, по
+                        какой-либо причине, то мы получим тоже самое.</p>
+                      <hr class='my-5'>
+                      <h4 class='mb-4'>Самостоятельная работа</h4>
+                      <div class="olist arabic">
+                        <ol class="arabic">
+                          <li>
+                            <p>Выполните все действия из теории к уроку</p>
+                          </li>
+                        </ol>
+                      </div>
+                      <hr class='my-5'>
+                      <h4 class='mb-4'>Дополнительные материалы</h4>
+                      <ol>
+                        <li>
+                          <a target="_blank" rel="noopener" class="text-decoration-none" href="https://en.wikipedia.org/wiki/FastCGI
+">FastCGI</a>
+                        </li>
+                        <li>
+                          <a target="_blank" rel="noopener" class="text-decoration-none" href="https://guides.hexlet.io/ru/dns/
+">Как работает DNS</a>
+                        </li>
+                        <li>
+                          <a target="_blank" rel="noopener" class="text-decoration-none" href="https://ru.hexlet.io/blog/posts/obratnyy-proksi
+">Что такое обратный прокси-сервер</a>
+                        </li>
+                      </ol>
+                      <hr class='mt-5'>
+                      <div class='d-flex flex-wrap flex-lg-nowrap mt-md-4 pt-lg-2 align-items-start'>
+                        <div class='me-3 flex-shrink-0'>
+                          <img width="149" height="44" alt="Аватары экспертов Хекслета"
+                            src="https://cdn2.hexlet.io/assets/faces/mentors-c5a2c0d5be5b134e174aad63fdd756ea3c31e3cbf86a0a112936dda315ec1a93.png"
+                            loading="lazy" />
+                        </div>
+                        <div class='mt-3 mt-lg-0 w-100'>
+                          <h2 class='h6 fw-bold mb-0 lh-base'>Остались вопросы? Задайте их в разделе «<a
+                              href="https://help.hexlet.io/ru/articles/110020-kak-zadat-vopros-po-uroku" target="_blank"
+                              class="text-decoration-none">Обсуждение</a>»</h2>
+                          <p class='mb-0'>Вам ответят команда поддержки Хекслета или другие студенты.</p>
+                        </div>
+                      </div>
+                      <div class='mt-4'>
+                        <h6 class='fw-bold mb-2'>Об обучении на Хекслете</h6>
+                        <ul>
+                          <li>Статья «<a href="https://guides.hexlet.io/ru/learning" target="_blank">Как учиться и
+                              справляться с негативными мыслями</a>»</li>
+                          <li>Статья «<a href="https://ru.hexlet.io/blog/posts/traps-learning" target="_blank">Ловушки
+                              обучения</a>»</li>
+                          <li>Статья «<a
+                              href="https://ru.hexlet.io/blog/posts/slozhnye-prostye-zadachi-po-programmirovaniyu"
+                              target="_blank">Сложные простые задачи по программированию</a>»</li>
+                          <li>Урок «<a
+                              href="https://ru.hexlet.io/courses/introduction_to_programming/lessons/hexlet-flow/theory_unit"
+                              target="_blank">Как эффективно учиться на Хекслете</a>»</li>
+                          <li>Вебинар «<a href="https://www.youtube.com/watch?v=dCYZppVgGww" target="_blank"
+                              rel="nofollow">Как самостоятельно учиться</a>»</li>
+                        </ul>
+
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class='mt-3 d-none d-md-flex'>
+                  <div class='ms-auto'>
+                    <form class="button_to" method="post"
+                      action="/courses/production-basics/lessons/web-server/finish_unit?unit=theory"><input
+                        type="hidden" name="_method" value="patch" autocomplete="off" /><button data-disable-with="<span class=&quot;spinner-border spinner-border-sm&quot; role=&quot;status&quot; aria-hidden=&quot;true&quot;></span><span class=&quot;d-none d-md-inline&quot;>&nbsp;Подождите...</span>
+" aria-expanded="false" data-html="true" class="btn btn-outline-primary btn-lg" id="finish-theory-button"
+                        type="submit"><span class='me-3'>Далее</span>
+                        <span class='fad fa-arrow-right'></span>
+                      </button><input type="hidden" name="authenticity_token"
+                        value="7brgxJ_pwxtw0Oi_E066SN5QS7YwtFcPWwzE7bHRl5vzHzETK0KJvXSxvYPK97IWCkoidohXXEJfVnJu9i5Wcw"
+                        autocomplete="off" /></form>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div aria-labelledby='community-tab' class='tab-pane fade overflow-auto h-100 position-relative' id='community'
+        role='tabpanel'>
+        <div class='container-xl mt-3 mt-md-4 mt-lg-5'>
+          <div class='row justify-content-center'>
+            <div class='col-12 col-lg-10 col-xl-9 col-xxl-8'>
+              <div id='community-box'></div>
+              <div class='text-center my-5'>
+                <img class="img-fluid" alt="Изображение Тото"
+                  src="https://cdn2.hexlet.io/assets/toto_thinking-113094bf7c5fc461595c855a97a67fdb4db848ace13021a11e61560103984165.png"
+                  loading="lazy" />
+                <p class='lead text-muted fw-normal'>Задавайте вопросы, если хотите обсудить теорию или упражнения. <a
+                    href="https://help.hexlet.io/ru/articles/110025" target="_blank">Команда поддержки Хекслета</a> и
+                  опытные участники сообщества помогут найти ответы и решить задачу</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='hexlet-lesson-sidebar flex-shrink-0 overflow-auto'>
+      <div class='row g-0 flex-row-reverse flex-md-row flex-fill'>
+        <div class='col-sm-4 col-md-12'>
+          <form class="button_to" method="post"
+            action="/courses/production-basics/lessons/web-server/finish_unit?unit=theory"><input type="hidden"
+              name="_method" value="patch" autocomplete="off" /><button data-disable-with="<span class=&quot;spinner-border spinner-border-sm&quot; role=&quot;status&quot; aria-hidden=&quot;true&quot;></span><span class=&quot;d-none d-md-inline&quot;>&nbsp;Подождите...</span>
+" aria-expanded="false" data-html="true"
+              class="btn btn-primary btn-lg w-100 d-md-flex align-items-md-center justify-content-md-between x-btn-no-active-decor rounded-0"
+              id="finish-button" type="submit"><span class='me-2'>Далее</span>
+              <span class='fad fa-arrow-right'></span>
+            </button><input type="hidden" name="authenticity_token"
+              value="L-oTJKoshFK4nTgQJyUF97NZ2zW_60ZxKKPQMryue_4xT8LzHofO9Lz8bSz-nA2pZ0Oy9QcITTws-Wax-1G6Fg"
+              autocomplete="off" /></form>
+        </div>
+        <div class='col col-md-12'>
+          <div class='d-flex flex-wrap h-100'>
+            <div class='d-none d-md-flex align-items-center w-100'>
+              <a class="btn btn-link btn-lg hexlet-base-nav-item rounded-0 text-dark border-end" title="Мой Хекслет"
+                href="/my"><span class='fal fa-home'></span>
+              </a><a data-bs-toggle="modal" data-bs-target="#coursenav-modal"
+                class="btn btn-link text-dark w-100 btn-lg border-left hexlet-base-nav-item text-decoration-none rounded-0"
+                href="#coursenav-modal"><span class='small'>Навигация</span>
+              </a>
+            </div>
+            <div class='px-2 py-3 w-100 border-top d-none d-md-block'>
+              <span class='d-none d-sm-block small text-center mb-2'>
+                пройдено 5 уроков из 9
+              </span>
+              <div class='px-1'>
+                <div class='progress mb-1'>
+                  <div class='progress-bar m-0 bg-success' style='width: 56%'></div>
+                </div>
+              </div>
+            </div>
+            <ul class='nav flex-row-reverse flex-md-column nav-justified flex-fill border-top pt-2' role='tablist'>
+              <li class='nav-item d-md-none'>
+                <a class="nav-link text-decoration-none h-100 d-flex justify-content-center align-items-center hexlet-base-nav-item"
+                  href="/my"><span class='far fa-home'></span>
+                </a>
+              </li>
+              <li class='nav-item d-md-none'>
+                <a data-bs-toggle="modal" data-bs-target="#coursenav-modal"
+                  class="nav-link text-decoration-none h-100 d-flex justify-content-center align-items-center hexlet-base-nav-item"
+                  href="#coursenav-modal"><span class='far fa-sitemap'></span>
+                </a>
+              </li>
+              <li class='nav-item text-start'>
+                <a class="nav-link active text-dark hexlet-base-nav-item h-100 py-3 py-md-2 d-flex justify-content-center justify-content-md-start align-items-center h-100"
+                  role="tab" aria-controls="lesson" aria-selected="true" data-bs-toggle="tab" href="#lesson"><span
+                    class='d-none d-md-inline-block me-1'>
+                    Шаг:
+                  </span>
+                  <span class='d-none d-md-inline-block'>теория</span>
+                  <span class='far fa-file-alt d-md-none'></span>
+                </a>
+              </li>
+              <li class='nav-item text-start'>
+                <a class="nav-link hexlet-base-nav-item h-100 py-3 py-md-2 text-dark" role="tab"
+                  aria-controls="community" aria-selected="false" data-bs-toggle="tab" data-bs-target="#community"
+                  href="/courses/production-basics/lessons/web-server/theory_unit#community"><span
+                    class='d-none d-md-inline-block'>Обсуждение</span>
+                  <span class='d-flex justify-content-center align-items-center h-100 d-md-none'>
+                    <span class='far fa-comments'></span>
+                  </span>
+                </a>
+              </li>
+              <div class='d-none d-md-block mt-1 pt-1 border-top'></div>
+              <li class='nav-item text-start'>
+                <a data-bs-toggle="modal" data-bs-target="#theory-tips-modal"
+                  class="nav-link hexlet-base-nav-item h-100 py-3 py-md-2 text-dark" href="#theory-tips-modal"><span
+                    class='d-none d-md-inline-block'>Сложности и вопросы?</span>
+                  <span class='d-flex justify-content-center align-items-center h-100 d-md-none'>
+                    <span class='fa-regular fa-circle-question'></span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id='lead-form'></div>
+  <div aria-hidden='true' aria-labelledby='coursenav-modal' class='modal fade' id='coursenav-modal' role='dialog'
+    tabindex='-1'>
+    <div class='modal-dialog'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h6 class='modal-title'>
+            <a class="text-decoration-none" href="/courses/production-basics">Продакшен и Деплой</a>
+          </h6>
+          <button aria-label='Закрыть' class='btn-close' data-bs-dismiss='modal'></button>
+        </div>
+        <div class='modal-body scrollable px-4'>
+          <div class='mb-3'>
+            <span class=''>
+              1.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/init/theory_unit">Введение</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/init/theory_unit">теория</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              2.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/deploy-to-paas/theory_unit">Деплой на PaaS</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/deploy-to-paas/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/deploy-to-paas/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              3.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/12-factors/theory_unit">12 Факторов</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/12-factors/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/12-factors/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              4.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/project-build/theory_unit">Сборка проекта</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/project-build/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/project-build/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              5.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/deploy/theory_unit">Деплой</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/deploy/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class='text-decoration-line-through'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/deploy/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class='fw-bolder'>
+              6.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/web-server/theory_unit">Прокси-сервер (Caddy)</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class='fw-bolder'>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/web-server/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/web-server/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              7.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/horizontal-scaling/theory_unit">Горизонтальное
+                масштабирование</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/horizontal-scaling/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/horizontal-scaling/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              8.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/database/theory_unit">Организация работы с базой данных</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/database/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/database/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+          <div class='mb-3'>
+            <span class=''>
+              9.
+              <a class="text-decoration-none text-dark"
+                href="/courses/production-basics/lessons/monitoring/theory_unit">Мониторинг</a>
+            </span>
+            <span class='small d-block'>
+              <span class='me-2'>↳</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/monitoring/theory_unit">теория</a>
+              </span>
+              <span class='mx-1'>/</span>
+              <span class=''>
+                <a class="text-decoration-none text-dark"
+                  href="/courses/production-basics/lessons/monitoring/quiz_unit">тесты</a>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class='modal-footer'>
+          <button class='btn btn-outline-info' data-bs-dismiss='modal'>Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='modal fade' id='theory-tips-modal'>
+    <div class='modal-dialog modal-lg'>
+      <div class='modal-content px-2'>
+        <div class='modal-header'>
+          <h5 class='modal-title'>Поможем, если трудно</h5>
+          <button aria-label='close' class='btn-close' data-bs-dismiss='modal' type='button'></button>
+        </div>
+        <div class='modal-body'>
+          <p class='mb-3'>Порой обучение продвигается с трудом. Сложная теория, непонятные задания… Хочется бросить. Не
+            сдавайтесь, все сложности можно преодолеть. Рассказываем, как</p>
+          <div class='fw-bold mb-2'>Не понятна формулировка, нашли опечатку?</div>
+          <div class='mb-3'>Выделите текст, нажмите <span class="badge bg-secondary text-white d-inline-block">ctrl +
+              enter</span> и опишите проблему, затем отправьте нам. В течение нескольких дней мы улучшим формулировку
+            или исправим опечатку</div>
+          <div class='fw-bold mb-2'>Что-то не получается в уроке?</div>
+          <p class='mb-0'>
+          <p class="mb-1">Загляните в раздел «Обсуждение»:</p>
+          <ol class="mb-0">
+            <li class="mb-1">Изучите вопросы, которые задавали по уроку другие студенты — возможно, ответ на ваш уже
+              есть</li>
+            <li class="mb-1">Если вопросы остались, задайте свой. Расскажите, что непонятно или сложно. Подробный отзыв
+              поможет сделать урок лучше. Если вопрос по коду, обязательно дайте ссылку на сохраненное решение</li>
+            <li class="mb-1">Наша команда поддержки ответит на ваше обращение в течение 2-3 дней</li>
+          </ol>
+          </p>
+          <p class='mt-3 mb-0'><a href="https://help.hexlet.io/ru/articles/110020-kak-zadat-vopros-po-uroku"
+              target="_blank">Подробнее</a> о том, как задавать вопросы по уроку</p>
+        </div>
+        <div class='modal-footer'>
+          <button class='btn btn-primary' data-bs-dismiss='modal' type='button'>
+            Понятно
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn2.hexlet.io/packs/js/runtime-c46c8fa475519161c359.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/21-a43d8d9af57bfd3ef2d7.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/2172-4a535541f119699ee48b.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/1001-38e2864fb832427571bc.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/4184-2ce3093d70804a567a15.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/594-a9a3a0d2a58493c425f5.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/3594-2a02867120e0706761a2.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/application-c9ccc5bef9d53f39f553.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/3935-93a8079d50a7b9f75886.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/2053-9da4292a6d02d5850303.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/6042-8308a43485a2899f4eec.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/5813-455a3b461c84f0cc3db1.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/5014-2397abca3b2d0ed6926d.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/4406-34a6b85d99841c0a4b4e.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/7206-97e28a10987b2a0fc0f5.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/263-01adf006611f34db3b8c.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/5091-e6b74d243f1d1ae464e1.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/1135-f6a0edfda3e2021ceda4.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/9945-f0f1eab04d5c2c5e1198.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/4283-a2fe2bef139dcee20e7d.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/3288-fe627816b8945211a8be.js" crossorigin="anonymous"
+    defer="defer"></script>
+  <script src="https://cdn2.hexlet.io/packs/js/community-79e80a5d68ec5a102548.js" crossorigin="anonymous"
+    defer="defer"></script>
+
+
+</body>
+
+</html>

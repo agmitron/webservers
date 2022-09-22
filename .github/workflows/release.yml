@@ -1,0 +1,6 @@
+# .github/workflows/release.yml
+
+# Добавляем сразу после сборки app
+- run: docker pull hexletcomponents/devops-example-caddy:latest
+- run: docker tag hexletcomponents/devops-example-caddy:latest hexletcomponents/devops-example-caddy:${{ github.ref_name }}
+- run: docker push hexletcomponents/devops-example-caddy:${{ github.ref_name }}

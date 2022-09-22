@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  # app: # Само приложение
+  #   build: . # Находится в корне репозитория
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - 3000:3000
+
+  caddy: # Веб-сервер
+    build: # Находится внутри services/caddy
+      context: .
+      dockerfile: services/caddy/Dockerfile
+    volumes:
+      - .:/app
+      - ./services/caddy/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 80:80
+      - 443:443

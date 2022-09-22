@@ -1,0 +1,11 @@
+# .github/workflows/main.yml
+
+# Добавляем сразу после сборки app
+- name: Build and push caddy
+  uses: docker/build-push-action@v2
+  with:
+    context: .
+    file: services/caddy/Dockerfile
+    push: true
+    # Не забудьте создать репозиторий в Docker Hub
+    tags: hexletcomponents/devops-example-caddy:latest
